@@ -1,7 +1,7 @@
 <?php
 
+use App\Http\Controllers\API\QuoteController;
 use App\Http\Controllers\API\UserController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,16 +20,14 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('v1')->group(function(){
 
     Route::group(['middleware' => 'auth:api'], function() {
-
         Route::get('/user', [UserController::class, 'user']);
-
+        Route::get('/qoutes', [QuoteController::class, 'index']);
     });
 
     Route::group(['prefix' => 'auth'], function() {
-
         Route::post('create', [UserController::class, 'store']);
         Route::post('login', [UserController::class, 'login']);
-        Route::post('access_code', [UserController::class, 'generateAccessTokenFromRefreshToken']);
+        Route::post('refresh', [UserController::class, 'generateAccessTokenFromRefreshToken']);
 
     });
 
