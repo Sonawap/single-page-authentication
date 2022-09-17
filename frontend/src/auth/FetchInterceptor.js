@@ -22,11 +22,6 @@ service.interceptors.request.use(config => {
 		config.headers[TOKEN_PAYLOAD_KEY] = `Bearer ${sessionToken}`
 	}
 
-	// if (!jwtToken && !sessionToken && !config.headers[PUBLIC_REQUEST_KEY]) {
-	// 	history.push(ENTRY_ROUTE)
-	// 	window.location.reload();
-	// }
-
   return config
 }, 
 (error) => {
@@ -41,32 +36,30 @@ service.interceptors.response.use( (response) => {
 async (error) => {
 	// Remove token and redirect 
 	const originalConfig = error.config;
-	if (originalConfig.url !== "/auth/signin" && error.response) {
+	if (originalConfig.url !== "auth/login" && error.response) {
 		if (error.response?.status === 401) {
 			if(localStorage.getItem(REFRESH_TOKEN)){
 				const data = {
-					refreshToken: localStorage.getItem(REFRESH_TOKEN)
+					refresh_token: localStorage.getItem(REFRESH_TOKEN)
 				};
 				try {
-					const response = await service.post(`${API_BASE_URL}/auth/token`, data);
-					const { accessToken } = response.data;
-					localStorage.setItem(AUTH_TOKEN, accessToken);
+					const response = await service.post(`${API_BASE_URL}/auth/refresh`, data);
+					const token = response?.token
+					localStorage.setItem(AUTH_TOKEN, token);
 					return service(originalConfig);
 				} catch (_error) {
 					return Promise.reject(_error);
 				}
 			}else{
-				localStorage.removeItem(AUTH_TOKEN);
-				localStorage.removeItem(REFRESH_TOKEN);
-				localStorage.removeItem(REDIRECT_PATH);
-				history.push(`${AUTH_PREFIX_PATH}/login`);
-				window.location.reload();
-				return Promise.reject(error);
-			}
+                localStorage.removeItem(AUTH_TOKEN);
+                localStorage.removeItem(REFRESH_TOKEN);
+                localStorage.removeItem(REDIRECT_PATH);
+                history.push(`${AUTH_PREFIX_PATH}/login`);
+                window.location.reload();
+            }
 		}
 	}
-	return Promise.reject(error);
-
+    return Promise.reject(error);
 });
 
 export default service

@@ -1,17 +1,15 @@
 const dev = {
-	API_ENDPOINT_URL: "http://localhost:8000/api"
+	API_ENDPOINT_URL: "http://localhost:8000/api/v1"
 };
 
 const prod = {
-  API_ENDPOINT_URL: "http://localhost:8000/api"
+  API_ENDPOINT_URL: "http://localhost:8000/api/v1"
 
 };
 
 const test = {
-	API_ENDPOINT_URL: "http://localhost:8000/api"
+	API_ENDPOINT_URL: "http://localhost:8000/api/v1"
 };
-
-console.log(process.env)
 
 const getEnv = () => {
 	switch (process.env.NODE_ENV) {

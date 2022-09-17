@@ -10,7 +10,7 @@ const AuthViews = () => {
   return (
     <Suspense fallback={<Loading cover="page" />}>
       <Routes>
-        <Route path="/signup" element={<SignUp title="Create an account" />} />
+        <Route path="/register" element={<SignUp title="Create an account" />} />
         <Route
           path="/login"
           element={<Login title="Login to your account" />}

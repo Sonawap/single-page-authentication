@@ -8,7 +8,6 @@ import { Link, useNavigate } from "react-router-dom";
 import AuthService from "services/AuthService";
 import { DASHBOARD_PREFIX_PATH, ERROR_MESSAGES } from "configs/AppConfig";
 import { AUTH_TOKEN, REFRESH_TOKEN } from "redux/constants/Auth";
-import handleErrors from "services/handleErrors";
 import { rules } from "validations/register";
 
 export const RegisterForm = (props) => {
@@ -23,27 +22,27 @@ export const RegisterForm = (props) => {
 
   const onSignUp = () => {
     form.validateFields().then((values) => {
+      setMessage(null);
       showLoading(true);
       AuthService.login(values)
         .then((response) => {
           localStorage.setItem(
             AUTH_TOKEN,
-            response?.data?.token?.accessToken
+            response?.token
           );
           localStorage.setItem(
             REFRESH_TOKEN,
-            response?.data?.token?.refreshToken
+            response?.refresh_token
           );
           authenticated(response);
           navigate(`${DASHBOARD_PREFIX_PATH}`);
         })
         .catch((e) => {
           setMessage(
-            e?.response?.data?.errors
-              ? e?.response?.data?.errors
-              : [
-                  ERROR_MESSAGES.NETWORK_CONNECTIVITY
-                ]
+            e?.response?.data?.error
+              ? e?.response?.data?.error
+              : ERROR_MESSAGES.NETWORK_CONNECTIVITY
+                
           );
         }).finally(() => {
           showLoading(false);
@@ -60,20 +59,6 @@ export const RegisterForm = (props) => {
         role="registerForm"
         onFinish={onSignUp}
       >
-        <Form.Item
-          name="name"
-          label="Name"
-          rules={rules.name}
-          hasFeedback
-          validateFirst={true}
-        >
-          <Input
-            autoComplete="off"
-            placeholder="Enter your first name"
-            maxLength={50}
-          />
-        </Form.Item>
-
         <Form.Item
           name="email"
           label="Email"
@@ -101,13 +86,16 @@ export const RegisterForm = (props) => {
             maxLength={50}
           />
         </Form.Item>
-
-        {message === true &&
-          <Alert
-            type="error"
-            showIcon
-            message={handleErrors(message)}
-          ></Alert>
+        {message &&
+          <div
+            className="mb-3"
+          >
+            <Alert
+              type="error"
+              showIcon
+              message={message}
+            ></Alert>
+          </div>
         }
 
         <Form.Item>
@@ -119,8 +107,8 @@ export const RegisterForm = (props) => {
         <div
           className={`'d-flex justify-content-between w-100 align-items-center text-primary`}
         >
-          <Link to="/auth/login">
-            <span >I have an account</span>
+          <Link to="/auth/register">
+            <span >Create account</span>
           </Link>
         </div>
       </Form>

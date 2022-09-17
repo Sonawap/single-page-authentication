@@ -21,8 +21,8 @@ const auth = (state = initState, action) => {
         ...state,
         loading: false,
         redirect: "/dashboard",
-        token: action.payload?.data?.token?.accessToken,
-        authUser: action.payload?.data?.user,
+        token: action?.payload?.token,
+        authUser: action?.payload?.user,
       };
     case SIGNOUT: {
       localStorage.removeItem(AUTH_TOKEN);

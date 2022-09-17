@@ -8,7 +8,6 @@ import { Link, useNavigate } from "react-router-dom";
 import AuthService from "services/AuthService";
 import { ERROR_MESSAGES } from "configs/AppConfig";
 import { AUTH_TOKEN, REFRESH_TOKEN } from "redux/constants/Auth";
-import handleErrors from "services/handleErrors";
 import { rules } from "validations/register";
 import { DASHBOARD_PREFIX_PATH } from "configs/AppConfig";
 
@@ -29,11 +28,11 @@ export const RegisterForm = (props) => {
         .then((response) => {
           localStorage.setItem(
             AUTH_TOKEN,
-            response?.data?.token?.accessToken
+            response?.data?.token
           );
           localStorage.setItem(
             REFRESH_TOKEN,
-            response?.data?.token?.refreshToken
+            response?.data?.refresh_token
           );
           authenticated(response);
           navigate(`${DASHBOARD_PREFIX_PATH}`);
@@ -103,11 +102,11 @@ export const RegisterForm = (props) => {
           />
         </Form.Item>
 
-        {message === true &&
+        {message &&
           <Alert
             type="error"
             showIcon
-            message={handleErrors(message)}
+            message={message}
           ></Alert>
         }
 
