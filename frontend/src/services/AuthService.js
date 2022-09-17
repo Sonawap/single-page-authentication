@@ -1,4 +1,4 @@
-import fetch from "auth/FetchInterceptor";
+import fetch from "auth/axios";
 
 const AuthService = {};
 const _url = "auth";
